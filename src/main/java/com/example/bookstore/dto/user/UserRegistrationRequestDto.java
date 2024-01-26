@@ -18,6 +18,6 @@ public class UserRegistrationRequestDto {
     @Length(min = 8, max = 20)
     private String password;
     @NotBlank
-    @Length(min = 8, max = 20) //todo implement @FieldMatch annotation
+    @Length(min = 8, max = 20)
     private String repeatPassword;
 }
