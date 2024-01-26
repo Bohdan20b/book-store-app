@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books
+      author: Bohdan20b
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "Pied Piper (Vintage Classics)"}
+              - column: {name: author, value: "Nevil Shute"}
+              - column: {name: isbn, value: "9781234567897"}
+              - column: {name: price, value: "19.99"}
+              - column: {name: description, value: "One of Nevil Shutes most exciting novels"}
+              - column: {name: cover_image, value: "http://example.com/cover1.jpg"}
+        - insert:
+            tableName: books
+            columns:
+              - column: {name: title, value: "House of Fat Man: Rules in the Golden Triangle"}
+              - column: {name: author, value: "M Gerard-Alesco"}
+              - column: {name: isbn, value: "9781234567891"}
+              - column: {name: price, value: "29.99"}
+              - column: {name: description, value: "Rules in the Golden Triangle is a thriller set "}
+              - column: {name: cover_image, value: "http://example.com/cover2.jpg"}
