@@ -11,6 +11,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Set;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -27,6 +28,7 @@ public class ShoppingCart {
     @OneToOne(fetch = FetchType.EAGER)
     private User user;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "shoppingCart")
+    @EqualsAndHashCode.Exclude
     private Set<CartItem> cartItems;
     private boolean isDeleted = false;
 }
