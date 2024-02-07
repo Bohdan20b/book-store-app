@@ -34,7 +34,7 @@ public class ShoppingCartController {
     public ShoppingCartDto addBookToShoppingCart(Authentication authentication,
             @RequestBody CartItemRequestDto dto) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return shoppingCartService.addItemsToCart(userDetails.getUsername(), dto);
+        return shoppingCartService.addItemToCart(userDetails.getUsername(), dto);
     }
 
     @Operation(summary = "Get all my items",

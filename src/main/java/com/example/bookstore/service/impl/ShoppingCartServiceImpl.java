@@ -35,7 +35,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto addItemsToCart(String email, CartItemRequestDto requestDto) {
+    public ShoppingCartDto addItemToCart(String email, CartItemRequestDto requestDto) {
+        if (!bookRepository.existsById(requestDto.getBookId())) {
+            throw new EntityNotFoundException("Can't find book with id: "
+                    + requestDto.getBookId());
+        }
         ShoppingCart shoppingCart = getShoppingCart(email);
         CartItem cartItem = cartItemMapper.toModel(requestDto);
         cartItem.setShoppingCart(shoppingCart);

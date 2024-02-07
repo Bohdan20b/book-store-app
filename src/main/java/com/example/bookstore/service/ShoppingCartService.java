@@ -6,7 +6,7 @@ import com.example.bookstore.dto.shoppingcart.ShoppingCartDto;
 public interface ShoppingCartService {
     ShoppingCartDto getShoppingCartDto(String email);
 
-    ShoppingCartDto addItemsToCart(String email, CartItemRequestDto requestDto);
+    ShoppingCartDto addItemToCart(String email, CartItemRequestDto requestDto);
 
     ShoppingCartDto updateQuantity(Long id, CartItemRequestDto requestDto);
 
