@@ -4,6 +4,7 @@ import com.example.bookstore.dto.cartitem.CartItemRequestDto;
 import com.example.bookstore.dto.shoppingcart.ShoppingCartDto;
 import com.example.bookstore.mapper.CartItemMapper;
 import com.example.bookstore.mapper.ShoppingCartMapper;
+import com.example.bookstore.model.Book;
 import com.example.bookstore.model.CartItem;
 import com.example.bookstore.model.ShoppingCart;
 import com.example.bookstore.model.User;
@@ -29,23 +30,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartDto getShoppingCartDto(String email) {
-        ShoppingCart shoppingCart = getShoppingCart(email);
-        shoppingCart.setCartItems(cartItemRepository.getAllByShoppingCart(shoppingCart));
+        ShoppingCart shoppingCart = getShoppingCartWithItems(email);
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
     @Override
     public ShoppingCartDto addItemToCart(String email, CartItemRequestDto requestDto) {
-        if (!bookRepository.existsById(requestDto.getBookId())) {
-            throw new EntityNotFoundException("Can't find book with id: "
-                    + requestDto.getBookId());
-        }
-        ShoppingCart shoppingCart = getShoppingCart(email);
+        Optional<Book> optionalBook = bookRepository.findById(requestDto.getBookId());
+        Book book = optionalBook.orElseThrow(() ->
+                new EntityNotFoundException("Can't find book with id: " + requestDto.getBookId()));
+        ShoppingCart shoppingCart = getShoppingCartWithItems(email);
         CartItem cartItem = cartItemMapper.toModel(requestDto);
         cartItem.setShoppingCart(shoppingCart);
-        cartItem.setBook(bookRepository.getReferenceById(requestDto.getBookId()));
+        cartItem.setBook(book);
         cartItemRepository.save(cartItem);
-        shoppingCart.setCartItems(cartItemRepository.getAllByShoppingCart(shoppingCart));
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
@@ -67,15 +65,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItemRepository.deleteById(id);
     }
 
-    private ShoppingCart getShoppingCart(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new EntityNotFoundException("User not found."));
-        Optional<ShoppingCart> shoppingCart = shoppingCartRepository
-                .findByUser(user);
-        return shoppingCart.orElseGet(() -> createNewShoppingCart(user));
+    private ShoppingCart getShoppingCartWithItems(String email) {
+        return shoppingCartRepository.findByUserWithItems(email)
+                .orElseGet(() -> createNewShoppingCart(email));
     }
 
-    private ShoppingCart createNewShoppingCart(User user) {
+    private ShoppingCart createNewShoppingCart(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new EntityNotFoundException("User not found."));
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
         return shoppingCartRepository.save(shoppingCart);
