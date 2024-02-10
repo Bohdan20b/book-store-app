@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories
+      author: Bohdan20b
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Horror"
+              - column:
+                  name: description
+                  value: "description of horror category"
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Mystery"
+              - column:
+                  name: description
+                  value: "description of mystery category"
