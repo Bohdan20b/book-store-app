@@ -40,10 +40,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Book book = optionalBook.orElseThrow(() ->
                 new EntityNotFoundException("Can't find book with id: " + requestDto.getBookId()));
         ShoppingCart shoppingCart = getShoppingCartWithItems(email);
-        boolean cartItemExists = shoppingCart.getCartItems().stream()
-                .anyMatch(cartItem -> cartItem.getBook().getId().equals(book.getId()));
-        if (cartItemExists) {
-            throw new IllegalArgumentException("The book is already in the shopping cart.");
+        if (!shoppingCart.getCartItems().isEmpty()) {
+            boolean cartItemExists = shoppingCart.getCartItems().stream()
+                    .anyMatch(cartItem -> cartItem.getBook().getId().equals(book.getId()));
+            if (cartItemExists) {
+                throw new IllegalArgumentException("The book is already in the shopping cart.");
+            }
         }
         CartItem cartItem = cartItemMapper.toModel(requestDto);
         cartItem.setShoppingCart(shoppingCart);
