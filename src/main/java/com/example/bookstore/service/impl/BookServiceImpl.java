@@ -1,4 +1,4 @@
-package com.example.bookstore.service;
+package com.example.bookstore.service.impl;
 
 import com.example.bookstore.dto.book.BookDto;
 import com.example.bookstore.dto.book.BookSearchParametersDto;
@@ -8,6 +8,7 @@ import com.example.bookstore.mapper.BookMapper;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.book.BookSpecificationBuilder;
+import com.example.bookstore.service.BookService;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
