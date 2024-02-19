@@ -10,5 +10,5 @@ import org.springframework.data.repository.query.Param;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllOrderByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    Optional<Order> findByUserIdAndId(@Param("userId") Long userId,@Param("orderId") Long orderId);
+    Optional<Order> findOrderById(@Param("orderId") Long orderId);
 }
