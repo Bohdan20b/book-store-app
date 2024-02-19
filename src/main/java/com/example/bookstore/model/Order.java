@@ -1,5 +1,6 @@
 package com.example.bookstore.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,7 +42,7 @@ public class Order {
     @Column(nullable = false)
     private String shippingAddress;
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private Set<OrderItem> orderItems;
     private boolean isDeleted = false;
 
