@@ -37,13 +37,12 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
-    private final UserRepository userRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final UserService userService;
 
     @Override
     public List<OrderDto> findAllOrdersByUser(String email, Pageable pageable) {
-        return orderRepository.findAllOrderByUserId(getUserByEmail(email).getId(), pageable)
+        return orderRepository.findAllOrderByUserId(userService.getUserByEmail(email).getId(), pageable)
                 .stream()
                 .map(orderMapper::toDto)
                 .toList();
@@ -63,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto createNewOrder(String email, CreateOrderRequestDto dto) {
-        User user = getUserByEmail(email);
+        User user = userService.getUserByEmail(email);
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserWithItems(user.getEmail())
                 .orElseThrow(() ->
                         new EntityNotFoundException("Can't find shopping cart by user id: "
@@ -94,21 +93,13 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new EntityNotFoundException("Can't find order with id: " + orderId)
         );
-        if (containsValidStatus(dto.status())) {
-            order.setStatus(dto.status());
-            return orderMapper.toDto(orderRepository.save(order));
-        } else {
-            throw new RuntimeException("Invalid status value");
-        }
+        order.setStatus(dto.status());
+        return orderMapper.toDto(orderRepository.save(order));
     }
 
     @Override
     public void deleteById(Long id) {
         orderRepository.deleteById(id);
-    }
-
-    private boolean containsValidStatus(Status status) {
-        return EnumSet.allOf(Status.class).contains(status);
     }
 
     private Set<OrderItem> createOrderItems(Order order, Set<CartItem> cartItems) {
@@ -133,10 +124,6 @@ public class OrderServiceImpl implements OrderService {
             totalPrice = totalPrice.add(itemTotal);
         }
         return totalPrice;
-    }
-
-    private User getUserByEmail(String email) {
-        return userService.getUserByEmail(email);
     }
 
     private Order getOrderById(Long orderId) {
