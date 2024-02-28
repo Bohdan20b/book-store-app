@@ -16,12 +16,10 @@ import com.example.bookstore.model.User;
 import com.example.bookstore.repository.OrderItemRepository;
 import com.example.bookstore.repository.OrderRepository;
 import com.example.bookstore.repository.ShoppingCartRepository;
-import com.example.bookstore.repository.UserRepository;
 import com.example.bookstore.service.OrderService;
 import com.example.bookstore.service.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +40,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findAllOrdersByUser(String email, Pageable pageable) {
-        return orderRepository.findAllOrderByUserId(userService.getUserByEmail(email).getId(), pageable)
+        return orderRepository.findAllOrderByUserId(userService
+                        .getUserByEmail(email).getId(), pageable)
                 .stream()
                 .map(orderMapper::toDto)
                 .toList();
